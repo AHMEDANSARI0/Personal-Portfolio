@@ -68,9 +68,7 @@ export function buildMetadata(
       description,
       ...(og ? { images: [og] } : {}),
     },
-    icons: content.theme.faviconUrl
-      ? { icon: content.theme.faviconUrl }
-      : undefined,
+    icons: { icon: content.theme.faviconUrl || "/favicon.svg" },
   };
 }
 

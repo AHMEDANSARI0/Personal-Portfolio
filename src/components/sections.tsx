@@ -10,6 +10,7 @@ import type {
   SocialContent,
   TestimonialDTO,
   FooterContent,
+  NavigationContent,
 } from "@/lib/types";
 import { DEFAULTS } from "@/lib/defaults";
 import { NewsletterForm } from "./newsletter-form";
@@ -30,21 +31,20 @@ export function Maybe({ text }: { text: string }) {
   );
 }
 
-export function Nav({ social, seo }: { social: SocialContent; seo: SeoContent }) {
+export function Nav({ social, navigation }: { social: SocialContent; navigation: NavigationContent }) {
   return (
-    <header className="sticky top-0 z-40 border-b border-line/60 bg-bg/70 backdrop-blur-md">
+    <header className="site-nav sticky top-0 z-40 border-b border-line/60 bg-bg/70 backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="#top" className="display text-sm font-semibold tracking-tight">
-          {seo.defaultTitle.replace(" — [Role]", "")}
+        <a href={navigation.logoHref} className="display text-sm font-semibold tracking-tight">
+          {navigation.logoText}
         </a>
-        <nav aria-label="Primary" className="hidden items-center gap-7 text-sm text-muted md:flex">
-          <a className="link-underline hover:text-fg" href="#about">About</a>
-          <a className="link-underline hover:text-fg" href="#skills">Skills</a>
-          <a className="link-underline hover:text-fg" href="#work">Work</a>
-          <a className="link-underline hover:text-fg" href="#testimonials">Testimonials</a>
+        <nav aria-label="Primary" className={`${navigation.showOnMobile ? "flex" : "hidden md:flex"} items-center gap-7 text-sm text-muted`}>
+          {navigation.items.filter((item) => item.visible).map((item) => (
+            <a key={`${item.label}-${item.href}`} className="link-underline hover:text-fg" href={item.href}>{item.label}</a>
+          ))}
         </nav>
         <div className="flex items-center gap-4 text-sm">
-          {social.linkedin && !social.linkedin.includes("[your-handle]") && (
+          {navigation.showLinkedIn && social.linkedin && !social.linkedin.includes("[your-handle]") && (
             <a
               className="hidden text-muted transition-colors hover:text-fg sm:inline"
               href={social.linkedin}
@@ -54,9 +54,7 @@ export function Nav({ social, seo }: { social: SocialContent; seo: SeoContent })
               LinkedIn
             </a>
           )}
-          <a href="#contact" className="btn btn-primary !py-1.5 !px-4 text-xs">
-            Contact
-          </a>
+          {navigation.showContact && <a href={navigation.contactHref} className="btn btn-primary !py-1.5 !px-4 text-xs">{navigation.contactLabel}</a>}
         </div>
       </div>
     </header>

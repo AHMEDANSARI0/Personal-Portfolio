@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TermsPage() {
   const content = await getAllContent();
   return <>
-    <Nav social={content.social} seo={content.seo} />
+    <Nav social={content.social} navigation={content.navigation} />
     <main className="mx-auto max-w-3xl px-6 py-20 md:py-28">
       <p className="eyebrow">Legal</p>
       <h1 className="mt-3 text-4xl font-semibold">Terms of use</h1>

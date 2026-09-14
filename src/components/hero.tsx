@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Component, useEffect, useMemo, useState } from "react";
 import { canRender3D, prefersReducedMotion } from "@/lib/client-capabilities";
 import type { AvatarContent, HeroContent, ThemeContent } from "@/lib/types";
+import { AiStudioHero } from "./ai-studio-hero";
 import { HeroStatusProvider } from "./three/hero-status";
 import { Preloader } from "./preloader";
 
@@ -33,6 +34,10 @@ export function Hero({
   avatar: AvatarContent;
   theme: ThemeContent;
 }) {
+  if (theme.template === "ai-studio") {
+    return <AiStudioHero hero={hero} settings={theme.heroStudio} />;
+  }
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
 

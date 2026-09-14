@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api, Card, Field, Input, SaveBar, Textarea, Toggle, UploadButton, useToast } from "@/components/admin/ui";
-import type { AboutContent, ContactContent, FooterContent, HeroContent, SiteContentMap, SocialContent } from "@/lib/types";
+import type { AboutContent, ContactContent, FooterContent, HeroContent, NavigationContent, SiteContentMap, SocialContent } from "@/lib/types";
 
 const TABS = [
   { key: "hero", label: "Hero" },
@@ -10,6 +10,7 @@ const TABS = [
   { key: "skills", label: "Skills" },
   { key: "contact", label: "Contact" },
   { key: "social", label: "Socials" },
+  { key: "navigation", label: "Navigation" },
   { key: "footer", label: "Footer" },
 ] as const;
 
@@ -61,8 +62,9 @@ export default function ContentAdmin() {
       {tab === "about" && <AboutEditor value={content.about} onToast={toast.show} />}
       {tab === "skills" && <SkillsEditor value={content.skills} onToast={toast.show} />}
       {tab === "contact" && <ContactEditor value={content.contact} onToast={toast.show} />}
-      {tab === "social" && <SocialEditor value={content.social} onToast={toast.show} />}
-          {tab === "footer" && <FooterEditor value={content.footer} onToast={toast.show} />}
+        {tab === "social" && <SocialEditor value={content.social} onToast={toast.show} />}
+        {tab === "navigation" && <NavigationEditor value={content.navigation} onToast={toast.show} />}
+        {tab === "footer" && <FooterEditor value={content.footer} onToast={toast.show} />}
       {toast.node}
     </div>
   );
@@ -264,6 +266,46 @@ function SocialEditor({ value, onToast }: { value: SocialContent; onToast: (m: s
         ))}
       </div>
       <SaveBar onSave={() => save("social", draft, onToast)} />
+    </Card>
+  );
+}
+
+function NavigationEditor({ value, onToast }: { value: NavigationContent; onToast: (m: string, t?: "ok" | "err") => void }) {
+  const { draft, set } = useDraft(value);
+  const [items, setItems] = useState(value.items.map((item) => `${item.label} | ${item.href} | ${item.visible ? "yes" : "no"}`).join("\n"));
+
+  useEffect(() => {
+    setItems(value.items.map((item) => `${item.label} | ${item.href} | ${item.visible ? "yes" : "no"}`).join("\n"));
+  }, [value]);
+
+  function parseItems(text: string) {
+    return text.split("\n").map((line) => {
+      const [label, href, visible = "yes"] = line.split("|").map((part) => part.trim());
+      return { label: label || "", href: href || "", visible: visible.toLowerCase() !== "no" };
+    }).filter((item) => item.label && item.href).slice(0, 8);
+  }
+
+  return (
+    <Card title="Navigation bar" desc="Control every public navbar label, link, visibility rule, logo, and CTA. Changes apply across all pages.">
+      <div className="grid gap-5">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Logo / brand text"><Input value={draft.logoText} onChange={(e) => set({ logoText: e.target.value })} /></Field>
+          <Field label="Logo link"><Input value={draft.logoHref} onChange={(e) => set({ logoHref: e.target.value })} /></Field>
+        </div>
+        <Field label="Menu links" hint="One per line: Label | #section-or-url | yes/no. Order here is the display order.">
+          <Textarea rows={7} value={items} onChange={(e) => setItems(e.target.value)} className="font-mono text-sm" />
+        </Field>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label="Contact button label"><Input value={draft.contactLabel} onChange={(e) => set({ contactLabel: e.target.value })} /></Field>
+          <Field label="Contact button link"><Input value={draft.contactHref} onChange={(e) => set({ contactHref: e.target.value })} /></Field>
+        </div>
+        <div className="flex flex-wrap gap-5">
+          <Toggle checked={draft.showContact} onChange={(v) => set({ showContact: v })} label="Show contact button" />
+          <Toggle checked={draft.showLinkedIn} onChange={(v) => set({ showLinkedIn: v })} label="Show LinkedIn shortcut" />
+          <Toggle checked={draft.showOnMobile} onChange={(v) => set({ showOnMobile: v })} label="Show menu links on mobile" />
+        </div>
+      </div>
+      <SaveBar onSave={() => save("navigation", { ...draft, items: parseItems(items) }, onToast)} />
     </Card>
   );
 }

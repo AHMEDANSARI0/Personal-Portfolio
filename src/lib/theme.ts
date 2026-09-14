@@ -56,6 +56,18 @@ export function readableOn(hex: string) {
 }
 
 export function buildPalette(theme: ThemeContent): Palette {
+  if (theme.template === "ai-studio") {
+    return {
+      bg: theme.heroStudio.backgroundStart,
+      bgSoft: theme.heroStudio.backgroundEnd,
+      fg: "#14213D",
+      muted: "#526985",
+      line: "#C9D9EC",
+      card: "#F7FAFF",
+      accent: theme.accent,
+      accentFg: readableOn(theme.accent),
+    };
+  }
   return { ...BASE[theme.mode], accent: theme.accent, accentFg: readableOn(theme.accent) };
 }
 

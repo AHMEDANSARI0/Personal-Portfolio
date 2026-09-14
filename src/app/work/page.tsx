@@ -17,7 +17,7 @@ export default async function WorkPage() {
 
   return (
     <>
-      <Nav social={content.social} seo={content.seo} />
+      <Nav social={content.social} navigation={content.navigation} />
       <main className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <h1 className="text-4xl font-semibold md:text-5xl">Selected work</h1>
         <p className="mt-3 max-w-lg text-muted">

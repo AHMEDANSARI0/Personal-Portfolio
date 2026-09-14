@@ -38,6 +38,12 @@ export default function ThemeAdmin() {
     }
   }
 
+  function updateStudio(patch: Partial<ThemeContent["heroStudio"]>) {
+    setTheme((current) =>
+      current ? { ...current, heroStudio: { ...current.heroStudio, ...patch } } : current,
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -48,6 +54,49 @@ export default function ThemeAdmin() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Palette" desc="Neutral base + one accent. Presets are one-click; fine-tune after.">
           <div className="space-y-5">
+            <Field label="Hero template" hint="Classic keeps the current hero. AI Studio enables the interactive workspace scene.">
+              <div className="flex flex-wrap gap-2">
+                {(["classic", "ai-studio"] as const).map((template) => (
+                  <button
+                    key={template}
+                    onClick={() => setTheme({ ...theme, template })}
+                    className="rounded-lg border px-3 py-2 text-sm capitalize"
+                    style={{ borderColor: theme.template === template ? "var(--accent)" : "var(--line)", fontWeight: theme.template === template ? 600 : 400 }}
+                  >
+                    {template === "ai-studio" ? "AI Studio" : "Classic hero"}
+                  </button>
+                ))}
+              </div>
+            </Field>
+
+            {theme.template === "ai-studio" && (
+              <div className="space-y-5 rounded-xl border border-line bg-bg-soft p-4">
+                <p className="text-sm font-semibold">AI Studio controls</p>
+                <div className="grid gap-4 sm:grid-cols-3">
+                  <Field label="Background start"><Input type="color" value={theme.heroStudio.backgroundStart} onChange={(e) => updateStudio({ backgroundStart: e.target.value })} /></Field>
+                  <Field label="Background end"><Input type="color" value={theme.heroStudio.backgroundEnd} onChange={(e) => updateStudio({ backgroundEnd: e.target.value })} /></Field>
+                  <Field label="Glow color"><Input type="color" value={theme.heroStudio.glowColor} onChange={(e) => updateStudio({ glowColor: e.target.value })} /></Field>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <Field label={`Glow intensity ${theme.heroStudio.glowIntensity}`}><Input type="range" min="0" max="1" step="0.05" value={theme.heroStudio.glowIntensity} onChange={(e) => updateStudio({ glowIntensity: Number(e.target.value) })} /></Field>
+                  <Field label={`Floating density ${theme.heroStudio.floatingDensity}`}><Input type="range" min="3" max="12" step="1" value={theme.heroStudio.floatingDensity} onChange={(e) => updateStudio({ floatingDensity: Number(e.target.value) })} /></Field>
+                  <Field label={`Floating speed ${theme.heroStudio.floatingSpeed}`}><Input type="range" min="0.25" max="3" step="0.25" value={theme.heroStudio.floatingSpeed} onChange={(e) => updateStudio({ floatingSpeed: Number(e.target.value) })} /></Field>
+                  <Field label={`Robot scale ${theme.heroStudio.robotScale}`}><Input type="range" min="0.7" max="1.35" step="0.05" value={theme.heroStudio.robotScale} onChange={(e) => updateStudio({ robotScale: Number(e.target.value) })} /></Field>
+                </div>
+                <div className="flex flex-wrap gap-4">
+                  <Toggle checked={theme.heroStudio.floatingEnabled} onChange={(v) => updateStudio({ floatingEnabled: v })} label="Floating elements" />
+                  <Toggle checked={theme.heroStudio.robotMotion} onChange={(v) => updateStudio({ robotMotion: v })} label="Robot motion" />
+                </div>
+                <Field label="Screen sequence" hint="Mixed rotates through code, automation, and live preview.">
+                  <select className="field" value={theme.heroStudio.screenMode} onChange={(e) => updateStudio({ screenMode: e.target.value as ThemeContent["heroStudio"]["screenMode"] })}>
+                    <option value="mixed">Mixed sequence</option>
+                    <option value="code">Code editor</option>
+                    <option value="preview">Live preview</option>
+                  </select>
+                </Field>
+              </div>
+            )}
+
             <div className="flex gap-2">
               {(["light", "dark"] as const).map((m) => (
                 <button

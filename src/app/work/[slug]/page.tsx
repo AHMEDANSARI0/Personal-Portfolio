@@ -51,7 +51,7 @@ export default async function ProjectPage(ctx: Ctx) {
 
   return (
     <>
-      <Nav social={content.social} seo={content.seo} />
+      <Nav social={content.social} navigation={content.navigation} />
       <main className="mx-auto max-w-4xl px-6 py-16 md:py-24">
         <p className="eyebrow">Case study</p>
         <h1 className="mt-3 text-4xl font-semibold md:text-5xl">{project.title}</h1>

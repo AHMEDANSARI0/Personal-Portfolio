@@ -158,7 +158,7 @@ export function UploadButton({
     <>
       <button
         type="button"
-        className="btn btn-ghost !py-1.5 !px-3 text-xs"
+        className="btn btn-ghost py-1.5! px-3! text-xs"
         disabled={busy}
         onClick={() => ref.current?.click()}
       >
@@ -228,7 +228,7 @@ export function SaveBar({
       <p className="text-xs text-muted">Saved content appears on the site immediately.</p>
       <div className="flex gap-3">
         {extra}
-        <button type="button" onClick={onSave} disabled={saving} className="btn btn-primary !py-2 text-sm disabled:opacity-60">
+        <button type="button" onClick={onSave} disabled={saving} className="btn btn-primary py-2! text-sm disabled:opacity-60">
           {saving ? "Saving…" : "Save changes"}
         </button>
       </div>

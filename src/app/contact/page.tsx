@@ -12,7 +12,7 @@ export default async function ContactPage() {
   const content = await getAllContent();
   return (
     <>
-      <Nav social={content.social} seo={content.seo} />
+      <Nav social={content.social} navigation={content.navigation} />
       <main>
         <Contact contact={content.contact} social={content.social} />
       </main>

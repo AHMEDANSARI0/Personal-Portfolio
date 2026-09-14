@@ -50,6 +50,23 @@ export const socialSchema = z.object({
   resumeUrl: z.string().max(400),
 });
 
+const navigationItemSchema = z.object({
+  label: z.string().max(40),
+  href: z.string().max(300),
+  visible: z.boolean(),
+});
+
+export const navigationSchema = z.object({
+  logoText: z.string().max(80),
+  logoHref: z.string().max(300),
+  items: z.array(navigationItemSchema).max(8),
+  showLinkedIn: z.boolean(),
+  contactLabel: z.string().max(40),
+  contactHref: z.string().max(300),
+  showContact: z.boolean(),
+  showOnMobile: z.boolean(),
+});
+
 const footerLinkSchema = z.object({
   label: z.string().min(1).max(50),
   href: z.string().min(1).max(400),
@@ -82,6 +99,19 @@ export const avatarSchema = z.object({
 export const themeSchema = z.object({
   mode: z.enum(["light", "dark"]),
   accent: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+  template: z.enum(["classic", "ai-studio"]),
+  heroStudio: z.object({
+    backgroundStart: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+    backgroundEnd: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+    glowColor: z.string().regex(/^#[0-9a-fA-F]{6}$/),
+    glowIntensity: z.coerce.number().min(0).max(1),
+    floatingEnabled: z.boolean(),
+    floatingSpeed: z.coerce.number().min(0.25).max(3),
+    floatingDensity: z.coerce.number().int().min(3).max(12),
+    robotScale: z.coerce.number().min(0.7).max(1.35),
+    robotMotion: z.boolean(),
+    screenMode: z.enum(["mixed", "code", "preview"]),
+  }),
   fonts: z.string().max(30),
   hero3dOnMobile: z.boolean(),
   ogImage: z.string().max(400),
@@ -140,6 +170,7 @@ export const contentKeySchema = z.enum([
   "skills",
   "contact",
   "social",
+  "navigation",
   "footer",
   "avatar",
   "theme",
@@ -152,6 +183,7 @@ export const CONTENT_SCHEMAS = {
   skills: skillsSchema,
   contact: contactSchema,
   social: socialSchema,
+  navigation: navigationSchema,
   footer: footerSchema,
   avatar: avatarSchema,
   theme: themeSchema,

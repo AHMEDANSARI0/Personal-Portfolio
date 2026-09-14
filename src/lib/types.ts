@@ -50,6 +50,23 @@ export interface SocialContent {
   resumeUrl: string;
 }
 
+export interface NavigationItem {
+  label: string;
+  href: string;
+  visible: boolean;
+}
+
+export interface NavigationContent {
+  logoText: string;
+  logoHref: string;
+  items: NavigationItem[];
+  showLinkedIn: boolean;
+  contactLabel: string;
+  contactHref: string;
+  showContact: boolean;
+  showOnMobile: boolean;
+}
+
 export type FooterTemplate = "stacked" | "split" | "columns" | "compact" | "editorial" | "band";
 
 export interface FooterLink {
@@ -85,10 +102,26 @@ export interface AvatarContent {
 }
 
 export type ThemeMode = "light" | "dark";
+export type HeroTemplate = "classic" | "ai-studio";
+
+export interface HeroStudioSettings {
+  backgroundStart: string;
+  backgroundEnd: string;
+  glowColor: string;
+  glowIntensity: number;
+  floatingEnabled: boolean;
+  floatingSpeed: number;
+  floatingDensity: number;
+  robotScale: number;
+  robotMotion: boolean;
+  screenMode: "mixed" | "code" | "preview";
+}
 
 export interface ThemeContent {
   mode: ThemeMode;
   accent: string;
+  template: HeroTemplate;
+  heroStudio: HeroStudioSettings;
   /** CSS font pair key, see src/lib/fonts.ts */
   fonts: string;
   /** Render full 3D hero on phones/tablets (off = poster fallback) */
@@ -112,6 +145,7 @@ export interface SiteContentMap {
   skills: SkillsContent;
   contact: ContactContent;
   social: SocialContent;
+  navigation: NavigationContent;
   footer: FooterContent;
   avatar: AvatarContent;
   theme: ThemeContent;

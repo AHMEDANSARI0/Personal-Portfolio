@@ -12,7 +12,7 @@ export default async function AboutPage() {
   const content = await getAllContent();
   return (
     <>
-      <Nav social={content.social} seo={content.seo} />
+      <Nav social={content.social} navigation={content.navigation} />
       <main>
         <About about={content.about} />
       </main>

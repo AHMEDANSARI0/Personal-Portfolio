@@ -17,7 +17,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <Nav social={content.social} seo={content.seo} />
+      <Nav social={content.social} navigation={content.navigation} />
       <main>
         <Hero hero={content.hero} avatar={content.avatar} theme={content.theme} />
         <About about={content.about} />

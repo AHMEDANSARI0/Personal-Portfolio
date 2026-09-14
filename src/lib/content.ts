@@ -13,7 +13,18 @@ async function readRow<K extends ContentKey>(key: K): Promise<SiteContentMap[K]>
   const row = await prisma.siteContent.findUnique({ where: { key } });
   if (!row) return DEFAULTS[key];
   // merge over defaults so new fields added later never break the page
-  return { ...DEFAULTS[key], ...(row.value as object) } as SiteContentMap[K];
+  return mergeContent(key, row.value) as SiteContentMap[K];
+}
+
+function mergeContent<K extends ContentKey>(key: K, value: unknown) {
+  const incoming = (value && typeof value === "object" ? value : {}) as Record<string, unknown>;
+  const defaults = DEFAULTS[key] as unknown as Record<string, unknown>;
+  if (key !== "theme") return { ...defaults, ...incoming };
+  return {
+    ...defaults,
+    ...incoming,
+    heroStudio: { ...defaults.heroStudio as object, ...(incoming.heroStudio as object | undefined) },
+  };
 }
 
 /** One DB round-trip for all content groups (used by pages + admin). */
@@ -23,7 +34,7 @@ export const getAllContent = cache(async () => {
     const map = new Map(rows.map((r) => [r.key, r.value as object]));
     const out = {} as SiteContentMap;
     (Object.keys(DEFAULTS) as ContentKey[]).forEach((key) => {
-      out[key] = { ...DEFAULTS[key], ...((map.get(key) as object) || {}) } as never;
+      out[key] = mergeContent(key, map.get(key)) as never;
     });
     return out;
   } catch (err) {
