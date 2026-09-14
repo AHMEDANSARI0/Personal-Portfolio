@@ -1,0 +1,18 @@
+node_modules
+.next
+out
+.env
+.env.local
+*.log
+.DS_Store
+next-env.d.ts
+pgdata
+.pgdata
+
+# runtime uploads — only the committed placeholders live in git
+/uploads/*
+!/uploads/.gitkeep
+!/uploads/image/
+/uploads/image/*
+!/uploads/image/hero-poster.jpg
+!/uploads/image/og-default.png
